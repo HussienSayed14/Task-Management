@@ -8,6 +8,7 @@ import com.vofaone.Task_Manager.service.UserAuthService;
 import com.vofaone.Task_Manager.util.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -38,7 +40,17 @@ public class UserAuthController {
             @ApiResponse(responseCode = "400", description = "Email Already Exist",
                     content = @Content(schema = @Schema(implementation = GenericResponse.class))),
             @ApiResponse(responseCode = "500", description = "An unexpected exception happened in the server",
-                    content = @Content(schema = @Schema(implementation = GenericResponse.class)))
+                    content = @Content(schema = @Schema(implementation = GenericResponse.class),
+                            examples = @ExampleObject(
+                            name = "ServerErrorResponse",
+                            value = """
+                                      {
+                                       responseCode: "-1",
+                                       success: false,
+                                       message: "Sorry Something Wrong Happened, please try again later"
+                                       }
+                                    """
+                    )))
     })
     @PostMapping(value = "/signUp", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<GenericResponse> signUp(@Valid @RequestBody SignUpRequest request, BindingResult bindingResult){
@@ -60,7 +72,18 @@ public class UserAuthController {
             @ApiResponse(responseCode = "403", description = "User entered wrong password",
                     content = @Content(schema = @Schema(implementation = LoginResponse.class))),
             @ApiResponse(responseCode = "500", description = "An unexpected exception happened in the server",
-                    content = @Content(schema = @Schema(implementation = LoginResponse.class)))
+                    content = @Content(schema = @Schema(implementation = LoginResponse.class),
+                    examples = @ExampleObject(
+                            name = "ServerErrorResponse",
+                            value = """
+                                      {
+                                      responseCode: "-1",
+                                       success: false,
+                                       message: "Sorry Something Wrong Happened, please try again later"
+                                       }
+                                    """
+                    )
+                    ))
     })
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpServletResponse response, BindingResult bindingResult){
