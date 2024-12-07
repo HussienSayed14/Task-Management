@@ -7,9 +7,12 @@ import com.vofaone.Task_Manager.dto.response.TaskResponse;
 import com.vofaone.Task_Manager.service.TaskService;
 import com.vofaone.Task_Manager.util.GenericResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -69,6 +72,22 @@ public class TaskController {
     @PostMapping("/restore")
     public ResponseEntity<GenericResponse> restoreLastDeletedTask(HttpServletRequest httpRequest) {
         return taskService.restoreLastDeletedTask(httpRequest);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
+        // Create a new Cookie with the same name as the JWT cookie
+        Cookie cookie = new Cookie("token", null); // Set value to null
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        cookie.setPath("/"); // Same as the original cookie path
+        cookie.setMaxAge(0); // This will remove the cookie immediately
+
+        // Add the cookie to the response to remove it from the browser
+        response.addCookie(cookie);
+
+        // Return success message
+        return new ResponseEntity<>("Logged out successfully", HttpStatus.OK);
     }
 
 
