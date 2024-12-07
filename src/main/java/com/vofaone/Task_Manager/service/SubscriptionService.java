@@ -46,6 +46,7 @@ public class SubscriptionService {
         response.setSuccessful();
 
         subscriptionRepository.save(subscription);
+
     }catch (Exception e){
         response.setServerError();
         logger.error("An Error happened while creating a task", e.getMessage());
