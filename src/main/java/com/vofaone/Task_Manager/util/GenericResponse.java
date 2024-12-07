@@ -26,6 +26,14 @@ public class GenericResponse {
         setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    public GenericResponse(String message){
+        setResponseCode("-2");
+        setSuccess(false);
+        setMessage(message);
+        setHttpStatus(HttpStatus.BAD_REQUEST);
+    }
+
+
     public void setSuccessful(){
         setResponseCode("0");
         setSuccess(true);
@@ -33,4 +41,18 @@ public class GenericResponse {
         setHttpStatus(HttpStatus.OK);
     }
 
+
+    public void setSuccessful(String message){
+        setResponseCode("0");
+        setSuccess(true);
+        setMessage(message);
+        setHttpStatus(HttpStatus.OK);
+    }
+
+    public void emailAlreadyExist() {
+        setResponseCode("1");
+        setSuccess(false);
+        setMessage("This email already exists");
+        setHttpStatus(HttpStatus.BAD_REQUEST);
+    }
 }
