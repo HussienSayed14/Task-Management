@@ -9,7 +9,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SignUpRequest {
+public class LoginRequest {
+
+    @Email(message = "Please enter a valid email")
+    @NotNull(message = "email Cannot be Null")
+    @Size(max = 150, message = "Email must be less than or equal to 150 characters")
+    private String email;
 
     @NotNull(message = "Password Cannot be null")
     @Size(min = 8, message = "Password must contain at least one letter and one number, and be at least 8 characters long")
@@ -18,14 +23,4 @@ public class SignUpRequest {
             message ="Password must contain at least one letter and one number, and be at least 8 characters long"
     )
     private String password;
-
-    @NotNull(message = "Name Cannot be Null")
-    @Size(max = 100, message = "name must be less than or equal to 100 characters")
-    private String name;
-
-    @Email(message = "Please enter a valid email")
-    @NotNull(message = "email Cannot be Null")
-    @Size(max = 150, message = "Email must be less than or equal to 150 characters")
-    private String email;
-
 }
