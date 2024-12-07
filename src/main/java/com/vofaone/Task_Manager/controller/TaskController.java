@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.List;
 
 @RestController
@@ -49,5 +50,26 @@ public class TaskController {
         return taskService.updateTask(request, httpRequest);
 
     }
+
+    @DeleteMapping("/{taskId}")
+    public ResponseEntity<GenericResponse> deleteTask(
+            @PathVariable int taskId,
+            HttpServletRequest httpRequest) {
+        return taskService.deleteTask(taskId, httpRequest);
+    }
+
+    @DeleteMapping("/batch")
+    public ResponseEntity<GenericResponse> batchDeleteTasks(
+            @RequestParam("startDate") Date startDate,
+            @RequestParam("endDate") Date endDate,
+            HttpServletRequest httpRequest) {
+        return taskService.batchDeleteTasks(startDate, endDate, httpRequest);
+    }
+
+    @PostMapping("/restore")
+    public ResponseEntity<GenericResponse> restoreLastDeletedTask(HttpServletRequest httpRequest) {
+        return taskService.restoreLastDeletedTask(httpRequest);
+    }
+
 
 }

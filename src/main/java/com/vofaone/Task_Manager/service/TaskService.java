@@ -13,12 +13,15 @@ import com.vofaone.Task_Manager.util.DateService;
 import com.vofaone.Task_Manager.util.GenericResponse;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -147,6 +150,93 @@ public class TaskService {
 
     private ResponseEntity<GenericResponse> buildErrorResponse(GenericResponse response, Runnable errorSetter) {
         errorSetter.run();
+        return ResponseEntity.status(response.getHttpStatus()).body(response);
+    }
+
+    public ResponseEntity<GenericResponse> deleteTask(int taskId, HttpServletRequest httpRequest) {
+        GenericResponse response = new GenericResponse();
+        try {
+            int userId = jwtService.extractUserIdFromCookie(httpRequest);
+
+            // Fetch the task by ID
+            Task task = taskRepository.findTaskById(taskId);
+            if (task == null) {
+                return buildErrorResponse(response, response::taskDoesNotExist);
+            }
+
+            // Check ownership
+            if (userId != task.getUser().getId()) {
+                return buildErrorResponse(response, response::userDoesNotOwnTask);
+            }
+
+            // Mark task as deleted
+            task.setDeleted(true);
+            task.setDeletedAt(DateService.getCurrentTimestamp());
+            taskRepository.save(task);
+
+            response.setSuccessful("Task deleted successfully.");
+        } catch (Exception e) {
+            logger.error("An Error happened while deleting task", e.getMessage());
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(response.getHttpStatus()).body(response);
+    }
+
+    public ResponseEntity<GenericResponse> batchDeleteTasks(Date startDate, Date endDate, HttpServletRequest httpRequest) {
+        GenericResponse response = new GenericResponse();
+
+        try {
+            int userId = jwtService.extractUserIdFromCookie(httpRequest);
+
+            List<Task> tasks = taskRepository.findByUserIdAndDueDateBetween(userId, startDate, endDate);
+
+            if (tasks.isEmpty()) {
+                response.setMessage("No tasks found in the specified period.");
+                response.setHttpStatus(HttpStatus.NOT_FOUND);
+                return ResponseEntity.status(response.getHttpStatus()).body(response);
+            }
+
+            tasks.forEach(task -> {
+                task.setDeleted(true);
+                task.setDeletedAt(DateService.getCurrentTimestamp());
+            });
+            taskRepository.saveAll(tasks);
+
+            response.setSuccessful("Tasks deleted successfully.");
+        } catch (Exception e) {
+            logger.error("An Error happened while deleting task", e.getMessage());
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.status(response.getHttpStatus()).body(response);
+    }
+
+    @Transactional
+    public ResponseEntity<GenericResponse> restoreLastDeletedTask(HttpServletRequest httpRequest) {
+        GenericResponse response = new GenericResponse();
+
+        try {
+            int userId = jwtService.extractUserIdFromCookie(httpRequest);
+
+            Task lastDeletedTask = taskRepository.findLatestDeletedTask(userId);
+
+            if (lastDeletedTask == null) {
+                response.setMessage("No deleted tasks to restore.");
+                response.setHttpStatus(HttpStatus.NOT_FOUND);
+                return ResponseEntity.status(response.getHttpStatus()).body(response);
+            }
+
+            // Restore the task
+            lastDeletedTask.setDeleted(false);
+            lastDeletedTask.setDeletedAt(null);
+            taskRepository.save(lastDeletedTask);
+
+            response.setSuccessful("Last deleted task restored successfully.");
+        } catch (Exception e) {
+            logger.error("An Error happened while batch deleting", e.getMessage());
+            e.printStackTrace();
+        }
+
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
 }
