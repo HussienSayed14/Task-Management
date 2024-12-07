@@ -38,6 +38,11 @@ public class User implements UserDetails {
     @Column(name = "created_at")
     private Timestamp createdAt;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Subscription subscription;
 
     //User by Spring Security
     @Override
