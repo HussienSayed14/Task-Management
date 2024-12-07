@@ -3,7 +3,6 @@ package com.vodafone.Task_Manager.controller;
 
 import com.vodafone.Task_Manager.dto.request.LoginRequest;
 import com.vodafone.Task_Manager.dto.response.LoginResponse;
-import com.vodafone.Task_Manager.service.EmailService;
 import com.vodafone.Task_Manager.dto.request.SignUpRequest;
 import com.vodafone.Task_Manager.service.UserAuthService;
 import com.vodafone.Task_Manager.util.GenericResponse;

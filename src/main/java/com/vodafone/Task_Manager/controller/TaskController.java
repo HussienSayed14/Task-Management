@@ -6,6 +6,12 @@ import com.vodafone.Task_Manager.dto.request.UpdateTaskRequest;
 import com.vodafone.Task_Manager.dto.response.TaskResponse;
 import com.vodafone.Task_Manager.service.TaskService;
 import com.vodafone.Task_Manager.util.GenericResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,13 +30,21 @@ import java.util.List;
 @RestController
 @RequestMapping("/task")
 @RequiredArgsConstructor
-@Tag(name = "Task Creation", description = "Apis That is Responsible Task (Creation,Retrieval, Deletion and Updating")
+@Tag(name = "Task Management", description = "APIs for managing tasks, including creation, retrieval, updating, and deletion.")
 public class TaskController {
+
     private final TaskService taskService;
 
+    @Operation(summary = "Create a new task", description = "Creates a task with the provided details.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task created successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenericResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Validation error",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenericResponse.class)))
+    })
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<GenericResponse> signUp(@Valid @RequestBody CreateTaskRequest request, HttpServletRequest httpRequest,
-                                           BindingResult bindingResult){
+                                           BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
             return ResponseEntity.badRequest().body(new GenericResponse(errorMessage));
@@ -38,6 +52,12 @@ public class TaskController {
         return taskService.createTask(request, httpRequest);
     }
 
+    @Operation(summary = "Retrieve tasks", description = "Fetches a list of tasks based on the provided filters.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tasks retrieved successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TaskResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Validation error")
+    })
     @PostMapping("/fetch-all")
     public ResponseEntity<List<TaskResponse>> retrieveTasks(@Valid @RequestBody RetrieveTasksRequest request,
                                                             HttpServletRequest httpRequest,
@@ -46,34 +66,58 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
 
+    @Operation(summary = "Update an existing task", description = "Updates a task with the provided details.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task updated successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenericResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Validation error")
+    })
     @PutMapping("/update")
     public ResponseEntity<GenericResponse> retrieveTasks(@Valid @RequestBody UpdateTaskRequest request,
-                                                            HttpServletRequest httpRequest,
-                                                            BindingResult bindingResult) {
+                                                         HttpServletRequest httpRequest,
+                                                         BindingResult bindingResult) {
         return taskService.updateTask(request, httpRequest);
-
     }
 
+    @Operation(summary = "Delete a task by ID", description = "Deletes a task identified by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Task not found")
+    })
     @DeleteMapping("/{taskId}")
     public ResponseEntity<GenericResponse> deleteTask(
-            @PathVariable int taskId,
+            @PathVariable @Parameter(description = "ID of the task to delete") int taskId,
             HttpServletRequest httpRequest) {
         return taskService.deleteTask(taskId, httpRequest);
     }
 
+    @Operation(summary = "Batch delete tasks", description = "Deletes tasks within the specified date range.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tasks deleted successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid date range")
+    })
     @DeleteMapping("/batch")
     public ResponseEntity<GenericResponse> batchDeleteTasks(
-            @RequestParam("startDate") Date startDate,
-            @RequestParam("endDate") Date endDate,
+            @RequestParam("startDate") @Parameter(description = "Start date for batch deletion") Date startDate,
+            @RequestParam("endDate") @Parameter(description = "End date for batch deletion") Date endDate,
             HttpServletRequest httpRequest) {
         return taskService.batchDeleteTasks(startDate, endDate, httpRequest);
     }
 
+    @Operation(summary = "Restore the last deleted task", description = "Restores the most recently deleted task.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task restored successfully"),
+            @ApiResponse(responseCode = "404", description = "No deleted task to restore")
+    })
     @PostMapping("/restore")
     public ResponseEntity<GenericResponse> restoreLastDeletedTask(HttpServletRequest httpRequest) {
         return taskService.restoreLastDeletedTask(httpRequest);
     }
 
+    @Operation(summary = "Logout the user", description = "Logs out the user by clearing their authentication token.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Logged out successfully")
+    })
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletResponse response) {
         // Create a new Cookie with the same name as the JWT cookie
@@ -89,6 +133,4 @@ public class TaskController {
         // Return success message
         return new ResponseEntity<>("Logged out successfully", HttpStatus.OK);
     }
-
-
 }
