@@ -33,4 +33,13 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 
     @Query("SELECT t FROM Task t WHERE t.status = 'PENDING' AND t.startDate > t.dueDate AND t.startDate <= :today")
     List<Task> findPendingOverdueTasks(Date today);
+
+
+
+
+    @Query("SELECT t FROM Task t WHERE t.dueDate BETWEEN :startDate AND :endDate AND t.user.id = :userId")
+    List<Task> findTasksByEndDateBetweenAndUserId(
+            Date startDate,
+            Date endDate,
+            int userId);
 }
