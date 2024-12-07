@@ -1,6 +1,7 @@
 package com.vofaone.Task_Manager.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vofaone.Task_Manager.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,7 +16,7 @@ import java.sql.Timestamp;
 @Setter
 @Builder
 @Table(name = "task", indexes = {
-        @Index(name = "idx_user",columnList = "user_id"),
+        @Index(name = "idx_user_not_deleted",columnList = "user_id,is_deleted"),
         @Index(name = "idx_start_date",columnList = "start_date"),
         @Index(name = "idx_due_date",columnList = "due_date"),
 
@@ -38,6 +39,7 @@ public class Task {
     @Column(nullable = false)
     private Status status;
     @Column(name = "is_deleted")
+    @JsonIgnore
     private boolean isDeleted;
     @Column(name = "is_overdue")
     private boolean isOverdue;
@@ -46,6 +48,7 @@ public class Task {
     @Column(name = "update_date")
     private Timestamp updatedAt;
     @Column(name = "deletion_date")
+    @JsonIgnore
     private Timestamp deletedAt;
 
 

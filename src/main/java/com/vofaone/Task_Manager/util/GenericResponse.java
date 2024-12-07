@@ -55,4 +55,18 @@ public class GenericResponse {
         setMessage("This email already exists");
         setHttpStatus(HttpStatus.BAD_REQUEST);
     }
+
+    public void taskDoesNotExist() {
+        setResponseCode("2");
+        setSuccess(false);
+        setMessage("This task does not exist");
+        setHttpStatus(HttpStatus.BAD_REQUEST);
+    }
+
+    public void userDoesNotOwnTask() {
+        setResponseCode("3");
+        setSuccess(false);
+        setMessage("You are not authorized to update this task");
+        setHttpStatus(HttpStatus.UNAUTHORIZED);
+    }
 }
