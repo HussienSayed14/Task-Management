@@ -26,6 +26,6 @@ public class LoginResponse extends GenericResponse {
         setResponseCode("2");
         setSuccess(false);
         setMessage("You have entered wrong password");
-        setHttpStatus(HttpStatus.BAD_REQUEST);
+        setHttpStatus(HttpStatus.UNAUTHORIZED);
     }
 }
