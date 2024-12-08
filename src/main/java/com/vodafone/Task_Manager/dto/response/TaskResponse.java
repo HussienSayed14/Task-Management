@@ -22,7 +22,7 @@ public class TaskResponse {
     private Timestamp creationDate;
 
     public TaskResponse(Task task){
-        this.id = task.getUser().getId();
+        this.id = task.getId();
         this.title = task.getTitle();
         this.description = task.getDescription();
         this.startDate =  task.getStartDate();
