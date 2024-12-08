@@ -143,6 +143,7 @@ public class TaskService {
         // Handle status update
         if (request.getStatus() != null && request.getStatus() == Status.COMPLETED && task.getStatus() != Status.COMPLETED) {
             task.setCompletionDate(DateService.getCurrentDate());
+            task.setStatus(Status.COMPLETED);
             if (task.getDueDate().before(DateService.getCurrentDate())) {
                 task.setOverdue(true);
             }
