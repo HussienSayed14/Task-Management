@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Tag(name = "User Authentication" , description = "Apis That is Responsible User Authenticated Operations, does not need JWT token")
+@Tag(name = "User Authentication", description = "Apis That is Responsible User Authenticated Operations, does not need JWT token")
 public class UserAuthController {
     private final UserAuthService userAuthService;
 
@@ -42,18 +42,18 @@ public class UserAuthController {
             @ApiResponse(responseCode = "500", description = "An unexpected exception happened in the server",
                     content = @Content(schema = @Schema(implementation = GenericResponse.class),
                             examples = @ExampleObject(
-                            name = "ServerErrorResponse",
-                            value = """
-                                      {
-                                       responseCode: "-1",
-                                       success: false,
-                                       message: "Sorry Something Wrong Happened, please try again later"
-                                       }
-                                    """
-                    )))
+                                    name = "ServerErrorResponse",
+                                    value = """
+                                              {
+                                               responseCode: "-1",
+                                               success: false,
+                                               message: "Sorry Something Wrong Happened, please try again later"
+                                               }
+                                            """
+                            )))
     })
     @PostMapping(value = "/signUp", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<GenericResponse> signUp(@Valid @RequestBody SignUpRequest request, BindingResult bindingResult){
+    ResponseEntity<GenericResponse> signUp(@Valid @RequestBody SignUpRequest request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
             return ResponseEntity.badRequest().body(new GenericResponse(errorMessage));
@@ -73,25 +73,25 @@ public class UserAuthController {
                     content = @Content(schema = @Schema(implementation = LoginResponse.class))),
             @ApiResponse(responseCode = "500", description = "An unexpected exception happened in the server",
                     content = @Content(schema = @Schema(implementation = LoginResponse.class),
-                    examples = @ExampleObject(
-                            name = "ServerErrorResponse",
-                            value = """
-                                      {
-                                      responseCode: "-1",
-                                       success: false,
-                                       message: "Sorry Something Wrong Happened, please try again later"
-                                       }
-                                    """
-                    )
+                            examples = @ExampleObject(
+                                    name = "ServerErrorResponse",
+                                    value = """
+                                              {
+                                              responseCode: "-1",
+                                               success: false,
+                                               message: "Sorry Something Wrong Happened, please try again later"
+                                               }
+                                            """
+                            )
                     ))
     })
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request, BindingResult bindingResult, HttpServletResponse response){
+    ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request, BindingResult bindingResult, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
             return ResponseEntity.badRequest().body(new LoginResponse(errorMessage));
         }
-        return userAuthService.login(request,response);
+        return userAuthService.login(request, response);
     }
 
     @Operation(summary = "Logout the user", description = "Logs out the user by clearing their authentication token.")

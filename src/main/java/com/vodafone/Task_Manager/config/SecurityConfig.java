@@ -21,14 +21,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authrize) -> authrize
-                .requestMatchers(
-                        "/actuator/**",
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**",
-                        "/auth/**").permitAll()
+                        .requestMatchers(
+                                "/actuator/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/auth/**").permitAll()
 
-                .anyRequest().authenticated()
-        )
+                        .anyRequest().authenticated()
+                )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers((headers) -> headers.frameOptions((frame) -> frame.sameOrigin()))
                 .authenticationProvider(authenticationProvider)

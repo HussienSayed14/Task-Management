@@ -15,9 +15,10 @@ public class LoginResponse extends GenericResponse {
     private String username;
     private Timestamp createdAt;
 
-    public LoginResponse(){}
+    public LoginResponse() {
+    }
 
-    public LoginResponse(String errorMessage){
+    public LoginResponse(String errorMessage) {
         setResponseCode("-2");
         setSuccess(false);
         setMessage(errorMessage);

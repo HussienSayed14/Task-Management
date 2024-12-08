@@ -20,7 +20,7 @@ public class ReportScheduler {
     private final TaskRepository taskRepository;
     private final EmailService emailService;
 
-//    @Scheduled(cron = "0 0 * * * ?") // Every hour
+    //    @Scheduled(cron = "0 0 * * * ?") // Every hour
     @Scheduled(cron = "0 */5 * * * ?") // Every 5 minutes
     public void generateAndSendReports() {
         int currentHour = LocalTime.now().getHour();
@@ -34,7 +34,7 @@ public class ReportScheduler {
             // Determine if the email should be sent for this subscription
             boolean shouldSend = shouldSendEmail(subscription, today);
 
-            if(shouldSend){
+            if (shouldSend) {
                 // Fetch tasks based on frequency
                 List<Task> tasks = fetchTasksForSubscription(subscription, today);
 

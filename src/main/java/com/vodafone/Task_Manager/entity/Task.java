@@ -16,9 +16,9 @@ import java.sql.Timestamp;
 @Setter
 @Builder
 @Table(name = "task", indexes = {
-        @Index(name = "idx_user_not_deleted",columnList = "user_id,is_deleted"),
-        @Index(name = "idx_start_date",columnList = "start_date"),
-        @Index(name = "idx_due_date",columnList = "due_date"),
+        @Index(name = "idx_user_not_deleted", columnList = "user_id,is_deleted"),
+        @Index(name = "idx_start_date", columnList = "start_date"),
+        @Index(name = "idx_due_date", columnList = "due_date"),
 
 })
 public class Task {

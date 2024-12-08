@@ -2,6 +2,7 @@ package com.vodafone.Task_Manager.repository;
 
 import com.vodafone.Task_Manager.entity.Task;
 import com.vodafone.Task_Manager.enums.Status;
+import org.hibernate.annotations.Parameter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -33,7 +34,6 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 
     @Query("SELECT t FROM Task t WHERE t.status = com.vodafone.Task_Manager.enums.Status.PENDING AND t.startDate > t.dueDate AND t.startDate <= :today")
     List<Task> findPendingOverdueTasks(Date today);
-
 
 
     @Query("SELECT t FROM Task t WHERE t.dueDate BETWEEN :startDate AND :endDate AND t.user.id = :userId")

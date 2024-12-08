@@ -21,11 +21,11 @@ public class TaskResponse {
     private boolean isOverdue;
     private Timestamp creationDate;
 
-    public TaskResponse(Task task){
+    public TaskResponse(Task task) {
         this.id = task.getId();
         this.title = task.getTitle();
         this.description = task.getDescription();
-        this.startDate =  task.getStartDate();
+        this.startDate = task.getStartDate();
         this.dueDate = task.getDueDate();
         this.completionDate = task.getCompletionDate();
         this.status = task.getStatus();

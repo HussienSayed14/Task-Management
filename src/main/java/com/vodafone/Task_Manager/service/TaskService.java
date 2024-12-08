@@ -92,7 +92,7 @@ public class TaskService {
                     .collect(Collectors.toList());
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("An Error happened while fetching tasks", e.getMessage());
             e.printStackTrace();
         }
@@ -132,6 +132,7 @@ public class TaskService {
 
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
+
     private void updateTaskFields(Task task, UpdateTaskRequest request) {
         task.setUpdatedAt(DateService.getCurrentTimestamp());
         task.setTitle(request.getTitle() != null ? request.getTitle() : task.getTitle());

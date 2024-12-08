@@ -24,7 +24,6 @@ public class JwtService {
     private final Environment environment;
 
 
-
     public String getJwtFromCookies(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
 
@@ -38,12 +37,12 @@ public class JwtService {
         return null;
     }
 
-    public Integer extractUserIdFromCookie(HttpServletRequest request){
-       String token = getJwtFromCookies(request);
-       return extractUserId(token);
+    public Integer extractUserIdFromCookie(HttpServletRequest request) {
+        String token = getJwtFromCookies(request);
+        return extractUserId(token);
     }
 
-    public String  extractUserEmailFromCookie(HttpServletRequest request){
+    public String extractUserEmailFromCookie(HttpServletRequest request) {
         String token = getJwtFromCookies(request);
         return extractEmail(token);
     }
@@ -68,9 +67,7 @@ public class JwtService {
     }
 
 
-
-
-    public String generateToken( UserDetails user,int userId) {
+    public String generateToken(UserDetails user, int userId) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("userId", userId);
         return generateExtraClaimsToken(extraClaims, user);

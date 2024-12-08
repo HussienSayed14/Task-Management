@@ -19,7 +19,7 @@ public class LoginRequest {
     @Size(min = 8, message = "Password must contain at least one letter and one number, and be at least 8 characters long")
     @Pattern(
             regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*#?&]{8,}$",
-            message ="Password must contain at least one letter and one number, and be at least 8 characters long"
+            message = "Password must contain at least one letter and one number, and be at least 8 characters long"
     )
     private String password;
 }

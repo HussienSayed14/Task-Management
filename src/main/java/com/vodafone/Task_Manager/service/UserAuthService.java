@@ -32,7 +32,7 @@ public class UserAuthService {
         GenericResponse response = new GenericResponse();
         try {
 
-            if(emailExists(request.getEmail())){
+            if (emailExists(request.getEmail())) {
                 response.emailAlreadyExist();
                 return ResponseEntity.status(response.getHttpStatus()).body(response);
             }
@@ -47,9 +47,9 @@ public class UserAuthService {
 
             userRepository.save(user);
             response.setSuccessful();
-        }catch (Exception e){
+        } catch (Exception e) {
             response.setServerError();
-            logger.error("An Error happened while creating user: "+ request.getEmail() + "\n" +
+            logger.error("An Error happened while creating user: " + request.getEmail() + "\n" +
                     "Error Message: " + e.getMessage());
             e.printStackTrace();
 
@@ -60,30 +60,30 @@ public class UserAuthService {
     public ResponseEntity<LoginResponse> login(LoginRequest request, HttpServletResponse httpResponse) {
         LoginResponse response = new LoginResponse();
 
-        try{
+        try {
             User user = userRepository.findUserByEmail(request.getEmail());
 
-            if(user == null){
+            if (user == null) {
                 response.emailNonExist();
                 return ResponseEntity.status(response.getHttpStatus()).body(response);
             }
 
-            if(isPasswordCorrect(request.getPassword(), user)){
-                String token = jwtService.generateToken(user,user.getId());
+            if (isPasswordCorrect(request.getPassword(), user)) {
+                String token = jwtService.generateToken(user, user.getId());
                 response.setSuccessful();
                 response.setUsername(user.getUsername());
                 response.setUserId(user.getId());
                 response.setCreatedAt(user.getCreatedAt());
                 generateHttpOnlyCookie(token, httpResponse);
 
-            }else{
+            } else {
                 response.setWrongPassword();
             }
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             response.setServerError();
-            logger.error("An Error happened while logging user: "+ request.getEmail() + "\n" +
+            logger.error("An Error happened while logging user: " + request.getEmail() + "\n" +
                     "Error Message: " + e.getMessage());
             e.printStackTrace();
         }
@@ -91,14 +91,14 @@ public class UserAuthService {
     }
 
 
-    private boolean isPasswordCorrect(String plainPassword, User user){
-        if(passwordEncoder.matches(plainPassword,user.getPassword())){
+    private boolean isPasswordCorrect(String plainPassword, User user) {
+        if (passwordEncoder.matches(plainPassword, user.getPassword())) {
             return true;
         }
         return false;
     }
 
-    private void generateHttpOnlyCookie(String token, HttpServletResponse httpResponse){
+    private void generateHttpOnlyCookie(String token, HttpServletResponse httpResponse) {
         Cookie jwtCookie = new Cookie("token", token);
         jwtCookie.setHttpOnly(true);  // Make it HttpOnly
         jwtCookie.setSecure(false);    // Set secure flag if you're using HTTPS
@@ -111,12 +111,10 @@ public class UserAuthService {
     }
 
 
-
-
-    private boolean emailExists(String email){
+    private boolean emailExists(String email) {
         User user = userRepository.findUserByEmail(email);
-        if(user != null){
-           return true;
+        if (user != null) {
+            return true;
         }
         return false;
     }

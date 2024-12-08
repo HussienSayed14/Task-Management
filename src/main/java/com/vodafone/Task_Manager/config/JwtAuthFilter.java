@@ -24,7 +24,7 @@ import java.io.IOException;
  * If the token is invalid, the request will be blocked.
  * This filter will be added to the Spring Security filter chain.
  * The filter chain is a series of filters that are applied to the request.
- * */
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -33,12 +33,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
 
 
-
     @Override
     protected void doFilterInternal(
-           @NonNull HttpServletRequest request,
-           @NonNull HttpServletResponse response,
-           @NonNull FilterChain filterChain)
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
         /** Extract the JWT from the HttpOnly cookie */
@@ -47,28 +46,28 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String email;
         /** If the jwt Token extracted from the cookies
          * then the request will be allowed to pass through to the next filter in the filter chain.
-          */
+         */
 
-        if(jwtToken == null ) {
+        if (jwtToken == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
 
-        try{
+        try {
 
             email = jwtService.extractEmail(jwtToken);
             /** This means that the user is NOT already authenticated */
-            if(email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails user = this.userDetailsService.loadUserByUsername(email);
                 /** If the JWT token is valid, then the user will be authenticated and update Security context*/
-                if(jwtService.isTokenValid(jwtToken,user)){
+                if (jwtService.isTokenValid(jwtToken, user)) {
                     UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(user,null,user.getAuthorities());
+                            new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authToken);
-                }else{
+                } else {
                     response.setContentType("application/json");
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 status code
                     response.getWriter().write("{\"message\": \"Your session has expired, please login again\"}");
@@ -84,7 +83,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     return;
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 status code
             response.getWriter().write("{\"message\": \"Your session has expired, please login again\"}");
@@ -99,7 +98,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             response.addCookie(cookie);
             return;
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
 
 
     }

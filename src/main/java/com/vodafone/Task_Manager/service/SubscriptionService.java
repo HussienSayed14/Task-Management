@@ -27,33 +27,33 @@ public class SubscriptionService {
     @Transactional
     public ResponseEntity<GenericResponse> subscribeToReports(SubscriptionRequest request, HttpServletRequest httpRequest) {
         GenericResponse response = new GenericResponse();
-    try{
-        int userId = jwtService.extractUserIdFromCookie(httpRequest);
+        try {
+            int userId = jwtService.extractUserIdFromCookie(httpRequest);
 
-        // Check if the user already has an active subscription
-        Subscription existingSubscription = subscriptionRepository.findByUserId(userId);
-        if (existingSubscription != null) {
-            throw new IllegalArgumentException("User already has an active subscription.");
+            // Check if the user already has an active subscription
+            Subscription existingSubscription = subscriptionRepository.findByUserId(userId);
+            if (existingSubscription != null) {
+                throw new IllegalArgumentException("User already has an active subscription.");
+            }
+
+            // Create a new subscription
+            Subscription subscription = new Subscription();
+            subscription.setUser(entityManager.getReference(User.class, userId));
+            subscription.setStartDate(request.getStartDate());
+            subscription.setFrequency(request.getFrequency());
+            subscription.setReportTime(request.getReportTime());
+            subscription.setLastReportDate(null);
+            response.setSuccessful();
+
+            subscriptionRepository.save(subscription);
+
+        } catch (Exception e) {
+            response.setServerError();
+            logger.error("An Error happened while creating a task", e.getMessage());
+            e.printStackTrace();
+
         }
-
-        // Create a new subscription
-        Subscription subscription = new Subscription();
-        subscription.setUser(entityManager.getReference(User.class, userId));
-        subscription.setStartDate(request.getStartDate());
-        subscription.setFrequency(request.getFrequency());
-        subscription.setReportTime(request.getReportTime());
-        subscription.setLastReportDate(null);
-        response.setSuccessful();
-
-        subscriptionRepository.save(subscription);
-
-    }catch (Exception e){
-        response.setServerError();
-        logger.error("An Error happened while creating a task", e.getMessage());
-        e.printStackTrace();
-
-    }
-    return ResponseEntity.status(response.getHttpStatus()).body(response);
+        return ResponseEntity.status(response.getHttpStatus()).body(response);
 
     }
 
@@ -70,7 +70,7 @@ public class SubscriptionService {
             }
             subscriptionRepository.delete(subscription);
             response.setSuccessful();
-        }catch (Exception e){
+        } catch (Exception e) {
             response.setServerError();
             logger.error("An Error happened while creating a task", e.getMessage());
             e.printStackTrace();

@@ -14,7 +14,7 @@ import java.sql.Date;
 @Setter
 @Builder
 @Table(name = "subscription", indexes = {
-        @Index(name = "idx_report_time",columnList = "report_time, start_date")})
+        @Index(name = "idx_report_time", columnList = "report_time, start_date")})
 
 public class Subscription {
     @Id
@@ -32,7 +32,6 @@ public class Subscription {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
 
 
 }

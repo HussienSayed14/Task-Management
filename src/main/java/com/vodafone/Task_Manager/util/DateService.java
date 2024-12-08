@@ -5,11 +5,11 @@ import java.sql.Timestamp;
 
 public class DateService {
 
-    public static Date getCurrentDate(){
+    public static Date getCurrentDate() {
         return new Date(System.currentTimeMillis());
     }
 
-    public static Timestamp getCurrentTimestamp(){
+    public static Timestamp getCurrentTimestamp() {
         return new Timestamp(System.currentTimeMillis());
     }
 }

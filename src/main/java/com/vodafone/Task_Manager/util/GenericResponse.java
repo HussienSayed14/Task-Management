@@ -19,14 +19,14 @@ public class GenericResponse {
     private String message;
 
 
-    public void setServerError(){
+    public void setServerError() {
         setResponseCode("-1");
         setSuccess(false);
         setMessage("Sorry Something Wrong Happened, please try again later");
         setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public GenericResponse(String message){
+    public GenericResponse(String message) {
         setResponseCode("-2");
         setSuccess(false);
         setMessage(message);
@@ -34,7 +34,7 @@ public class GenericResponse {
     }
 
 
-    public void setSuccessful(){
+    public void setSuccessful() {
         setResponseCode("0");
         setSuccess(true);
         setMessage("Request Successful");
@@ -42,7 +42,7 @@ public class GenericResponse {
     }
 
 
-    public void setSuccessful(String message){
+    public void setSuccessful(String message) {
         setResponseCode("0");
         setSuccess(true);
         setMessage(message);

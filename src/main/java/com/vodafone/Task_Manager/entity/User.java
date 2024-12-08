@@ -18,7 +18,7 @@ import java.util.List;
 @Setter
 @Builder
 @Table(name = "users", indexes = {
-        @Index(name = "idx_email",columnList = "email",unique = true)
+        @Index(name = "idx_email", columnList = "email", unique = true)
 })
 public class User implements UserDetails {
     @Id
