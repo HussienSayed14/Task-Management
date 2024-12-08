@@ -2,10 +2,7 @@ package com.vodafone.Task_Manager.dto.request;
 
 
 import com.vodafone.Task_Manager.enums.Status;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,5 +28,6 @@ public class CreateTaskRequest {
     @NotNull(message = "Due date is required.")
     private Date dueDate;
 
+    @Pattern(regexp = "PENDING|COMPLETED|OVERDUE", message = "Invalid status value")
     private Status status = Status.PENDING;
 }
