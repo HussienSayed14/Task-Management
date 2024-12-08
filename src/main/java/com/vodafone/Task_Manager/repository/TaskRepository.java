@@ -2,7 +2,6 @@ package com.vodafone.Task_Manager.repository;
 
 import com.vodafone.Task_Manager.entity.Task;
 import com.vodafone.Task_Manager.enums.Status;
-import org.hibernate.annotations.Parameter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,8 +12,8 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query("SELECT t FROM Task t WHERE t.user.id = :userId " +
             "AND t.isDeleted = false " +
             "AND (:status IS NULL OR t.status = :status) " +
-            "AND (:startDate IS NULL OR t.startDate >= :startDate) " +
-            "AND (:dueDate IS NULL OR t.dueDate <= :dueDate)")
+            "AND (CAST(:startDate AS date) IS NULL OR t.startDate >= :startDate) " +
+            "AND (CAST(:dueDate AS date) IS NULL OR t.dueDate <= :dueDate)")
     List<Task> findTasksByFilters(
             int userId,
             Status status,

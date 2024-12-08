@@ -79,6 +79,7 @@ public class TaskService {
         List<TaskResponse> userTasks = new ArrayList<>();
 
         try {
+            System.out.println("Start Date: " + request.getStartDate());
             int userId = jwtService.extractUserIdFromCookie(httpRequest);
             List<Task> filteredTasks = taskRepository.findTasksByFilters(
                     userId,
