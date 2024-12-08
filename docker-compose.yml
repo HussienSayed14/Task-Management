@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:15
+    container_name: postgres-instance
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: task_manager
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: task-manager-backend
+    environment:
+      DB_URL: jdbc:postgresql://database:5432/task_manager
+      DB_USER: postgres
+      DB_PASSWORD: root
+      JWT_SECRET: 0B82E73FD4B3AFE987D39326C13D86AF43CED758F1A9B1659FE17FA962127404DE275AA218F7DD4331636C7D010018EDD0F8AFD097D6546430A4227824E5CDC4BCF9C2653FD817D669B8B34BAA73BC7B3B926D30CFC9B87DFB9E1361CF7E9B0310F4318F59BC6ED245703A60F8706A51F87A89D52BED4FF2C494F09A9F40BCBC
+      EMAIL: report.manager9@gmail.com
+      EMAIL_PASSWORD: '<Enter_Your_APP_KEY>'
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    networks:
+      - app-network
+
+networks:
+  app-network:
+
+volumes:
+  postgres-data:
