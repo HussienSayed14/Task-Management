@@ -79,7 +79,6 @@ public class TaskService {
         List<TaskResponse> userTasks = new ArrayList<>();
 
         try {
-            System.out.println("Start Date: " + request.getStartDate());
             int userId = jwtService.extractUserIdFromCookie(httpRequest);
             List<Task> filteredTasks = taskRepository.findTasksByFilters(
                     userId,
@@ -220,18 +219,21 @@ public class TaskService {
         try {
             int userId = jwtService.extractUserIdFromCookie(httpRequest);
 
-            Task lastDeletedTask = taskRepository.findLatestDeletedTask(userId);
+            List<Task> lastDeletedTasks = taskRepository.findLatestDeletedTasks(userId);
 
-            if (lastDeletedTask == null) {
+            if (lastDeletedTasks.isEmpty() || lastDeletedTasks == null) {
                 response.setMessage("No deleted tasks to restore.");
                 response.setHttpStatus(HttpStatus.NOT_FOUND);
                 return ResponseEntity.status(response.getHttpStatus()).body(response);
             }
 
-            // Restore the task
-            lastDeletedTask.setDeleted(false);
-            lastDeletedTask.setDeletedAt(null);
-            taskRepository.save(lastDeletedTask);
+            // Restore the tasks
+            for(Task task : lastDeletedTasks){
+                task.setDeleted(false);
+                task.setDeletedAt(null);
+            }
+
+            taskRepository.saveAll(lastDeletedTasks);
 
             response.setSuccessful("Last deleted task restored successfully.");
         } catch (Exception e) {
