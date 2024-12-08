@@ -209,6 +209,7 @@ This section provides example requests and responses for the core API endpoints.
       "status": "PENDING"
     }
   ]
+  ```
 
 
   
