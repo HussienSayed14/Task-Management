@@ -87,6 +87,7 @@ This Java Spring Boot application provides task management, report subscriptions
    docker-compose down
    ```
 
+---
 
 ## **API Documentation**
 
@@ -106,6 +107,8 @@ Swagger provides a user-friendly interface to explore and test all the available
 For detailed API examples and testing, you can also use our **Public Postman Workspace**. This includes all endpoints with pre-configured request examples and responses.
 
 - [**Task Management and Subscription System - Postman Workspace**](https://www.postman.com/vodafone-task-manger/team-workspace/overview)   
+
+---
 
 
 ## **API Examples**
