@@ -37,6 +37,7 @@ public class Task {
     @Column(name = "completion_date")
     private Date completionDate;
     @Column(nullable = false)
+    @Enumerated
     private Status status;
     @Column(name = "is_deleted")
     @JsonIgnore

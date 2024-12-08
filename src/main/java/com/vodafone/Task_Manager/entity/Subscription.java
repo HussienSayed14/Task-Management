@@ -21,6 +21,7 @@ public class Subscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Enumerated
     private Frequency frequency;
     @Column(name = "report_time", nullable = false)
     private int reportTime;

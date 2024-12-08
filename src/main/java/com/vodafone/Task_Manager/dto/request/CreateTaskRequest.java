@@ -28,7 +28,6 @@ public class CreateTaskRequest {
     @NotNull(message = "Start date is required.")
     private Date startDate;
 
-    @FutureOrPresent
     @NotNull(message = "Due date is required.")
     private Date dueDate;
 

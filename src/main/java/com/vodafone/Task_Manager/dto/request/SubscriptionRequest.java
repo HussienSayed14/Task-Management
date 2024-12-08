@@ -11,10 +11,8 @@ import java.sql.Date;
 @Setter
 public class SubscriptionRequest {
     @NotNull(message = "Start date is required.")
-    @FutureOrPresent(message = "Start Date cannot be in the Past")
     private Date startDate;
 
-    @NotBlank(message = "Frequency cannot be blank")
     @NotNull(message = "Frequency is required.")
     private Frequency frequency;
 

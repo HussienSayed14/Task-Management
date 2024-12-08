@@ -12,6 +12,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Inte
     Subscription findByUserId(int userId);
 
 
-    @Query("SELECT s FROM Subscription s WHERE s.reportTime = :reportTime AND s.startDate <= :today")
+    @Query("SELECT s FROM Subscription s WHERE s.reportTime = :currentHour AND s.startDate <= :today")
     List<Subscription> findByReportTime(int currentHour, Date today);
 }
