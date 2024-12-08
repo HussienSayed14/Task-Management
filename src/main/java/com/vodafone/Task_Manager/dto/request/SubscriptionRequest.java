@@ -13,7 +13,7 @@ public class SubscriptionRequest {
     @NotNull(message = "Start date is required.")
     private Date startDate;
 
-    @Pattern(regexp = "DAILY|WEEKLY|MONTHLY", message = "Invalid status value")
+    @Pattern(regexp = "DAILY|WEEKLY|MONTHLY", message = "Invalid frequency value")
     @NotNull(message = "Frequency is required.")
     private Frequency frequency;
 
