@@ -21,7 +21,7 @@ public class ReportScheduler {
     private final EmailService emailService;
 
     //    @Scheduled(cron = "0 0 * * * ?") // Every hour
-    @Scheduled(cron = "0 */5 * * * ?") // Every 5 minutes
+    @Scheduled(cron = "0 */5 * * * ?") // Every 5 minutes for testing purposes
     public void generateAndSendReports() {
         int currentHour = LocalTime.now().getHour();
         Date today = Date.valueOf(LocalDate.now());
