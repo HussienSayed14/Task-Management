@@ -2,6 +2,7 @@ package com.vodafone.Task_Manager.dto.request;
 
 
 import com.vodafone.Task_Manager.enums.Status;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -24,11 +25,10 @@ public class CreateTaskRequest {
     @Size(max = 500, message = "Description cannot exceed 500 characters.")
     private String description;
 
-    @NotBlank(message = "Start Date Cannot be blank")
     @NotNull(message = "Start date is required.")
     private Date startDate;
 
-    @NotBlank(message = "Due Date Cannot be blank")
+    @FutureOrPresent
     @NotNull(message = "Due date is required.")
     private Date dueDate;
 
