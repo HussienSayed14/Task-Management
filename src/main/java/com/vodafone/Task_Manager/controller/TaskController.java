@@ -13,12 +13,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -60,8 +57,7 @@ public class TaskController {
     })
     @PostMapping("/fetch-all")
     public ResponseEntity<List<TaskResponse>> retrieveTasks(@Valid @RequestBody RetrieveTasksRequest request,
-                                                            HttpServletRequest httpRequest,
-                                                            BindingResult bindingResult) {
+                                                            HttpServletRequest httpRequest) {
         List<TaskResponse> tasks = taskService.retrieveTasks(request, httpRequest);
         return ResponseEntity.ok(tasks);
     }
@@ -76,6 +72,10 @@ public class TaskController {
     public ResponseEntity<GenericResponse> retrieveTasks(@Valid @RequestBody UpdateTaskRequest request,
                                                          HttpServletRequest httpRequest,
                                                          BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
+            return ResponseEntity.badRequest().body(new GenericResponse(errorMessage));
+        }
         return taskService.updateTask(request, httpRequest);
     }
 
@@ -114,23 +114,4 @@ public class TaskController {
         return taskService.restoreLastDeletedTask(httpRequest);
     }
 
-    @Operation(summary = "Logout the user", description = "Logs out the user by clearing their authentication token.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Logged out successfully")
-    })
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletResponse response) {
-        // Create a new Cookie with the same name as the JWT cookie
-        Cookie cookie = new Cookie("token", null); // Set value to null
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false);
-        cookie.setPath("/"); // Same as the original cookie path
-        cookie.setMaxAge(0); // This will remove the cookie immediately
-
-        // Add the cookie to the response to remove it from the browser
-        response.addCookie(cookie);
-
-        // Return success message
-        return new ResponseEntity<>("Logged out successfully", HttpStatus.OK);
-    }
 }

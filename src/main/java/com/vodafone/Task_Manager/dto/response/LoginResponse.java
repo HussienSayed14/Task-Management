@@ -15,6 +15,15 @@ public class LoginResponse extends GenericResponse {
     private String username;
     private Timestamp createdAt;
 
+    public LoginResponse(){}
+
+    public LoginResponse(String errorMessage){
+        setResponseCode("-2");
+        setSuccess(false);
+        setMessage(errorMessage);
+        setHttpStatus(HttpStatus.BAD_REQUEST);
+    }
+
     public void emailNonExist() {
         setResponseCode("2");
         setSuccess(false);

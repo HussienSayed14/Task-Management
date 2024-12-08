@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,7 +34,12 @@ public class SubscriptionController {
     @PostMapping
     public ResponseEntity<GenericResponse> subscribeToReports(
             @Valid @RequestBody SubscriptionRequest request,
+            BindingResult bindingResult,
             HttpServletRequest httpRequest) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
+            return ResponseEntity.badRequest().body(new GenericResponse(errorMessage));
+        }
         return subscriptionService.subscribeToReports(request, httpRequest);
     }
 
