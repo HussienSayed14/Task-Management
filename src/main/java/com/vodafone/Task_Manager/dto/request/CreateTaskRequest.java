@@ -28,6 +28,5 @@ public class CreateTaskRequest {
     @NotNull(message = "Due date is required.")
     private Date dueDate;
 
-    @Pattern(regexp = "PENDING|COMPLETED|OVERDUE", message = "Invalid status value")
     private Status status = Status.PENDING;
 }

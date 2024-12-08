@@ -20,8 +20,6 @@ public class UpdateTaskRequest {
     private String description;
     private Date startDate;
     private Date dueDate;
-
-    @Pattern(regexp = "PENDING|COMPLETED|OVERDUE", message = "Invalid status value")
     private Status status;
 
 }
