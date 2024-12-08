@@ -91,7 +91,6 @@ public class UserAuthController {
             String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
             return ResponseEntity.badRequest().body(new LoginResponse(errorMessage));
         }
-        System.out.println("Login is executed");
         return userAuthService.login(request,response);
     }
 

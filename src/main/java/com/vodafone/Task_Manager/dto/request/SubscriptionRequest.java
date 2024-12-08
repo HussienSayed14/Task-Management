@@ -1,10 +1,7 @@
 package com.vodafone.Task_Manager.dto.request;
 
 import com.vodafone.Task_Manager.enums.Frequency;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +14,7 @@ public class SubscriptionRequest {
     @FutureOrPresent(message = "Start Date cannot be in the Past")
     private Date startDate;
 
+    @NotBlank(message = "Frequency cannot be blank")
     @NotNull(message = "Frequency is required.")
     private Frequency frequency;
 
