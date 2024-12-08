@@ -52,7 +52,7 @@ public class UserAuthController {
                                             """
                             )))
     })
-    @PostMapping(value = "/signUp", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/sign-up", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<GenericResponse> signUp(@Valid @RequestBody SignUpRequest request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
