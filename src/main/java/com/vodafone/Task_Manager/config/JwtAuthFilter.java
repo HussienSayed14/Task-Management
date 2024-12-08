@@ -2,6 +2,7 @@ package com.vodafone.Task_Manager.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -71,6 +72,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     response.setContentType("application/json");
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 status code
                     response.getWriter().write("{\"message\": \"Your session has expired, please login again\"}");
+                    // Create a new Cookie with the same name as the JWT cookie
+                    Cookie cookie = new Cookie("token", null); // Set value to null
+                    cookie.setHttpOnly(true);
+                    cookie.setSecure(false);
+                    cookie.setPath("/"); // Same as the original cookie path
+                    cookie.setMaxAge(0); // This will remove the cookie immediately
+
+                    // Add the cookie to the response to remove it from the browser
+                    response.addCookie(cookie);
                     return;
                 }
             }
@@ -78,6 +88,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 status code
             response.getWriter().write("{\"message\": \"Your session has expired, please login again\"}");
+            // Create a new Cookie with the same name as the JWT cookie
+            Cookie cookie = new Cookie("token", null); // Set value to null
+            cookie.setHttpOnly(true);
+            cookie.setSecure(false);
+            cookie.setPath("/"); // Same as the original cookie path
+            cookie.setMaxAge(0); // This will remove the cookie immediately
+
+            // Add the cookie to the response to remove it from the browser
+            response.addCookie(cookie);
             return;
         }
         filterChain.doFilter(request,response);
