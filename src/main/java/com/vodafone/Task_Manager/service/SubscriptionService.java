@@ -50,9 +50,8 @@ public class SubscriptionService {
 
         } catch (Exception e) {
             response.setServerError();
-            logger.error("An Error happened while creating a task", e.getMessage());
+            logger.error("An Error happened in report subscription", e.getMessage());
             e.printStackTrace();
-
         }
         return ResponseEntity.status(response.getHttpStatus()).body(response);
 
@@ -73,7 +72,7 @@ public class SubscriptionService {
             response.setSuccessful();
         } catch (Exception e) {
             response.setServerError();
-            logger.error("An Error happened while creating a task", e.getMessage());
+            logger.error("An Error happened while unsubscribing", e.getMessage());
             e.printStackTrace();
 
         }
