@@ -66,9 +66,10 @@ public class SubscriptionService {
             // Find the active subscription and deactivate it
             Subscription subscription = subscriptionRepository.findByUserId(userId);
             if (subscription == null) {
+                response.setNoActiveSubscription();
                 throw new IllegalArgumentException("No active subscription found.");
             }
-            subscriptionRepository.delete(subscription);
+            subscriptionRepository.deleteSubscriptionByUserId(userId);
             response.setSuccessful();
         } catch (Exception e) {
             response.setServerError();

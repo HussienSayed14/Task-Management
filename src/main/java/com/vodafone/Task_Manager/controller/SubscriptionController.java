@@ -47,7 +47,7 @@ public class SubscriptionController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Unsubscribed successfully",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenericResponse.class))),
-            @ApiResponse(responseCode = "404", description = "No active subscription found",
+            @ApiResponse(responseCode = "403", description = "No active subscription found",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenericResponse.class)))
     })
     @DeleteMapping

@@ -76,4 +76,12 @@ public class GenericResponse {
         setMessage("User already has an active subscription.");
         setHttpStatus(HttpStatus.BAD_REQUEST);
     }
+
+    public void setNoActiveSubscription() {
+        setResponseCode("5");
+        setSuccess(false);
+        setMessage("No active subscription found.");
+        setHttpStatus(HttpStatus.BAD_REQUEST);
+
+    }
 }
