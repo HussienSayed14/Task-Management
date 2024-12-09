@@ -5,6 +5,8 @@ import com.vodafone.Task_Manager.entity.Task;
 import com.vodafone.Task_Manager.repository.SubscriptionRepository;
 import com.vodafone.Task_Manager.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -19,35 +21,45 @@ public class ReportScheduler {
     private final SubscriptionRepository subscriptionRepository;
     private final TaskRepository taskRepository;
     private final EmailService emailService;
+    private static final Logger logger = LoggerFactory.getLogger(ReportScheduler.class);
 
     //    @Scheduled(cron = "0 0 * * * ?") // Every hour
     @Scheduled(cron = "0 */5 * * * ?") // Every 5 minutes for testing purposes
     public void generateAndSendReports() {
-        int currentHour = LocalTime.now().getHour();
-        Date today = Date.valueOf(LocalDate.now());
+        try {
+
+            logger.info("Starting Scheduled Report Generation");
+            int currentHour = LocalTime.now().getHour();
+            Date today = Date.valueOf(LocalDate.now());
 
 
-        // Fetch subscriptions for the current hour
-        List<Subscription> subscriptions = subscriptionRepository.findByReportTime(currentHour, today);
+            // Fetch subscriptions for the current hour
+            List<Subscription> subscriptions = subscriptionRepository.findByReportTime(currentHour, today);
 
-        for (Subscription subscription : subscriptions) {
-            // Determine if the email should be sent for this subscription
-            boolean shouldSend = shouldSendEmail(subscription, today);
+            for (Subscription subscription : subscriptions) {
+                // Determine if the email should be sent for this subscription
+                boolean shouldSend = shouldSendEmail(subscription, today);
 
-            if (shouldSend) {
-                // Fetch tasks based on frequency
-                List<Task> tasks = fetchTasksForSubscription(subscription, today);
+                if (shouldSend) {
+                    // Fetch tasks based on frequency
+                    List<Task> tasks = fetchTasksForSubscription(subscription, today);
 
-                // Generate the HTML report
-                String reportHtml = generateHtmlReport(tasks);
+                    // Generate the HTML report
+                    String reportHtml = generateHtmlReport(tasks);
 
-                // Send email
-                emailService.sendEmail(subscription.getUser().getEmail(), "Your Task Report", reportHtml);
+                    // Send email
+                    emailService.sendEmail(subscription.getUser().getEmail(), "Your Task Report", reportHtml);
 
-                // Update last sent date
-                subscription.setLastReportDate(today);
-                subscriptionRepository.save(subscription);
+                    logger.info("A report has been sent to: " + subscription.getUser().getEmail());
+                    // Update last sent date
+                    subscription.setLastReportDate(today);
+                    subscriptionRepository.save(subscription);
+                }
             }
+        } catch (Exception e) {
+            logger.error("An error happened while generating report: ", e.getMessage());
+            e.printStackTrace();
+
         }
     }
 
