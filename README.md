@@ -86,6 +86,10 @@ This Java Spring Boot application provides task management, report subscriptions
    ```bash
    docker-compose down
    ```
+    **Use this command in case you want to remove the database volume**:
+    ```bash
+    docker-compose down --volumes
+    ```
 
 ---
 
