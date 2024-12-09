@@ -32,10 +32,13 @@ public class ReportScheduler {
             int currentHour = LocalTime.now().getHour();
             Date today = Date.valueOf(LocalDate.now());
 
+            logger.info("Current Hour: " + currentHour);
+            logger.info("Today date: " + today);
 
             // Fetch subscriptions for the current hour
             List<Subscription> subscriptions = subscriptionRepository.findByReportTime(currentHour, today);
 
+            logger.info("Subscriptions size: " + subscriptions.size());
             for (Subscription subscription : subscriptions) {
                 logger.info("Checking subscription for: " + subscription.getUser().getEmail());
                 // Determine if the email should be sent for this subscription
@@ -86,7 +89,7 @@ public class ReportScheduler {
     private boolean shouldSendEmail(Subscription subscription, Date today) {
         // If no email has been sent yet
         if (subscription.getLastReportDate() == null) {
-            logger.debug("Last Report date is empty email will be sent");
+            logger.info("Last Report date is empty email will be sent");
             return true;
         }
 
@@ -108,7 +111,7 @@ public class ReportScheduler {
                 throw new IllegalArgumentException("Invalid frequency: " + subscription.getFrequency());
         }
 
-        logger.debug("Next Send date it: " + nextSendDate);
+        logger.info("Next Send date it: " + nextSendDate);
         return !today.toLocalDate().isBefore(nextSendDate); // Send if today is on or after the next send date
     }
 
