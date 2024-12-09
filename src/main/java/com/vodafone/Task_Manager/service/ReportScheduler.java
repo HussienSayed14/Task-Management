@@ -86,7 +86,7 @@ public class ReportScheduler {
     private boolean shouldSendEmail(Subscription subscription, Date today) {
         // If no email has been sent yet
         if (subscription.getLastReportDate() == null) {
-            logger.info("Last Report date is null email will be sent");
+            logger.debug("Last Report date is empty email will be sent");
             return true;
         }
 
@@ -108,7 +108,7 @@ public class ReportScheduler {
                 throw new IllegalArgumentException("Invalid frequency: " + subscription.getFrequency());
         }
 
-        logger.info("Next Send date it: " + nextSendDate);
+        logger.debug("Next Send date it: " + nextSendDate);
         return !today.toLocalDate().isBefore(nextSendDate); // Send if today is on or after the next send date
     }
 
