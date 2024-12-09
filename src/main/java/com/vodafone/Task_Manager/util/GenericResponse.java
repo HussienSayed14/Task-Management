@@ -69,4 +69,11 @@ public class GenericResponse {
         setMessage("You are not authorized to update this task");
         setHttpStatus(HttpStatus.UNAUTHORIZED);
     }
+
+    public void setUserAlreadyHasSubscription() {
+        setResponseCode("4");
+        setSuccess(false);
+        setMessage("User already has an active subscription.");
+        setHttpStatus(HttpStatus.BAD_REQUEST);
+    }
 }

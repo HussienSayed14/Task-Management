@@ -33,7 +33,8 @@ public class SubscriptionService {
             // Check if the user already has an active subscription
             Subscription existingSubscription = subscriptionRepository.findByUserId(userId);
             if (existingSubscription != null) {
-                throw new IllegalArgumentException("User already has an active subscription.");
+                response.setUserAlreadyHasSubscription();
+                return ResponseEntity.status(response.getHttpStatus()).body(response);
             }
 
             // Create a new subscription
